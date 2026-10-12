@@ -1,0 +1,28 @@
+[package]
+name = "riverthink"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+argon2 = "0.6.0"
+axum = { version = "0.8.9", features = ["form", "query"] }
+getrandom = "0.4.3"
+serde = { version = "1.0.229", features = ["derive"] }
+sha2 = "0.11.0"
+sqlx = { version = "0.9.0", default-features = false, features = ["runtime-tokio", "sqlite", "migrate", "macros"] }
+tokio = { version = "1.53.2", features = ["rt-multi-thread", "macros", "time", "signal", "net", "sync"] }
+tower-http = { version = "0.7.1", features = ["compression-gzip"] }
+
+[dev-dependencies]
+tempfile = "3.27.0"
+
+[profile.release]
+opt-level = 2
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = true
+
+# Optimize dependencies even in debug/test builds (argon2 is unusably slow otherwise).
+[profile.dev.package."*"]
+opt-level = 2
